@@ -11,14 +11,14 @@ llm = ChatOpenAI(
     base_url="http://127.0.0.1:3030/v1",  # 替换为本地网关地址
     api_key="any-string-is-ok"            # 替换为网关要求的任意字符串
 )
-# 1. 定义每个步骤的独立处理链 (基于图片2)
+# 1. 定义每个步骤的独立处理链
 extraction_chain = (
     ChatPromptTemplate.from_template("请从以下文本中提取技术规格：\n\n{text_input}")
     | llm
     | StrOutputParser()
 )
 
-# 2. 构建完整提示链（前一步输出作为下一步输入）(基于图片2)
+# 2. 构建完整提示链（前一步输出作为下一步输入）
 full_chain = (
     {"specifications": extraction_chain}  # 第一步输出传递给第二步
     | ChatPromptTemplate.from_template("请将以下技术规格转为JSON：\n\n{specifications}")
